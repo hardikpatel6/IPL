@@ -1,0 +1,171 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+
+Description: IPL Public APIs - Players, Teams, Seasons, Matches
+
+Globals:
+  Function:
+    Runtime: nodejs22.x
+    Timeout: 10
+    MemorySize: 512
+    Environment:
+      Variables:
+        TABLE_NAME_PLAYER: IPL_Player_Table
+        TABLE_NAME_TEAMS: IPL_Teams_Table
+        TABLE_NAME_SEASON: IPL_Season_Table
+        TABLE_NAME_MATCHES: IPL_Matches_Table
+
+Resources:
+
+  ########################
+  # Node Modules Layer
+  ########################
+  NodeModulesLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: IPLNodeModulesLayer
+      Description: Shared node_modules layer
+      ContentUri: layers/
+      CompatibleRuntimes:
+        - nodejs22.x
+      RetentionPolicy: Retain
+
+  ########################
+  # Get All Players
+  ########################
+  GetAllPlayersFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints:
+          - src/handlers/getAllPlayers.ts
+        Target: node22
+        Minify: true
+        Sourcemap: false
+        External:
+          - "@aws-sdk/*"
+    Properties:
+      Handler: dist/handlers/getAllPlayers.handler
+      Layers:
+        - !Ref NodeModulesLayer
+      Events:
+        GetPlayersAPI:
+          Type: Api
+          Properties:
+            Path: /players
+            Method: GET
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:Scan
+                - dynamodb:Query
+              Resource:
+                - arn:aws:dynamodb:ap-south-1:325216835653:table/IPL_Player_Table
+
+  ########################
+  # Get All Teams
+  ########################
+  GetAllTeamsFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints:
+          - src/handlers/getAllTeams.ts
+        Target: node22
+        Minify: true
+        Sourcemap: false
+        External:
+          - "@aws-sdk/*"
+    Properties:
+      Handler: dist/handlers/getAllTeams.handler
+      Layers:
+        - !Ref NodeModulesLayer
+      Events:
+        GetTeamsAPI:
+          Type: Api
+          Properties:
+            Path: /teams
+            Method: GET
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:Scan
+                - dynamodb:Query
+              Resource:
+                - arn:aws:dynamodb:ap-south-1:325216835653:table/IPL_Teams_Table
+
+  ########################
+  # Get All Seasons
+  ########################
+  GetAllSeasonsFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints:
+          - src/handlers/getAllSeasons.ts
+        Target: node22
+        Minify: true
+        Sourcemap: false
+        External:
+          - "@aws-sdk/*"
+    Properties:
+      Handler: dist/handlers/getAllSeasons.handler
+      Layers:
+        - !Ref NodeModulesLayer
+      Events:
+        GetSeasonsAPI:
+          Type: Api
+          Properties:
+            Path: /seasons
+            Method: GET
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:Scan
+                - dynamodb:Query
+              Resource:
+                - arn:aws:dynamodb:ap-south-1:325216835653:table/IPL_Season_Table
+
+  ########################
+  # Get All Matches
+  ########################
+  GetAllMatchesFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints:
+          - src/handlers/getAllMatches.ts
+        Target: node22
+        Minify: true
+        Sourcemap: false
+        External:
+          - "@aws-sdk/*"
+    Properties:
+      Handler: dist/handlers/getAllMatches.handler
+      Layers:
+        - !Ref NodeModulesLayer
+      Events:
+        GetMatchesAPI:
+          Type: Api
+          Properties:
+            Path: /matches
+            Method: GET
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:Scan
+                - dynamodb:Query
+              Resource:
+                - arn:aws:dynamodb:ap-south-1:325216835653:table/IPL_Matches_Table

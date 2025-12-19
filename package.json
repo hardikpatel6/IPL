@@ -1,0 +1,36 @@
+{
+  "name": "ipl",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build":"tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "createSeasonTable":"ts-node src/scripts/createSeasonTable.ts",
+    "createMatchTable":"ts-node src/scripts/createMatchTable.ts",
+    "createPlayerTable":"ts-node src/scripts/createPlayerTable.ts",
+    "createTeamTable":"ts-node src/scripts/createTeamTable.ts",
+    "createInningTable":"ts-node src/scripts/createInningTable.ts",
+    "seedInningTable":"ts-node src/scripts/seedInningTable.ts",
+    "seedMatchTable":"ts-node src/scripts/seedMatchTable.ts",
+    "seedPlayerTable":"ts-node src/scripts/seedPlayerTable.ts",
+    "seedSeasonTable":"ts-node src/scripts/seedSeasonTable.ts",
+    "seedTeamTable":"ts-node src/scripts/seedTeamTable.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@apollo/server": "^5.2.0",
+    "@types/aws-lambda": "^8.10.159",
+    "@types/node": "^25.0.3",
+    "esbuild": "^0.27.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.955.0",
+    "@aws-sdk/lib-dynamodb": "^3.955.0",
+    "apollo-server-lambda": "^3.13.0",
+    "dotenv": "^17.2.3"
+  }
+}
